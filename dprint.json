@@ -1,0 +1,13 @@
+{
+    "plugins": [
+        "https://plugins.dprint.dev/typescript-0.95.7.wasm"
+    ],
+    "typescript": {
+        "arrowFunction.useParentheses": "force",
+        "indentWidth": 4,
+        "jsx.quoteStyle": "preferDouble",
+        "module.sortImportDeclarations": "maintain",
+        "quoteStyle": "alwaysSingle",
+        "semiColons": "asi"
+    }
+}

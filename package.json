@@ -1,0 +1,84 @@
+{
+  "name": "react-native-document-picker-macos",
+  "version": "0.1.0",
+  "module": "./lib/module/index.js",
+  "main": "./lib/commonjs/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "source": "./src/index.ts",
+  "exports": {
+    ".": {
+      "default": "./lib/module/index.js",
+      "require": "./lib/commonjs/index.js",
+      "types": "./lib/typescript/src/index.d.ts",
+      "source": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "lib",
+    "macos",
+    "*.podspec"
+  ],
+  "workspaces": [
+    "example"
+  ],
+  "scripts": {
+    "build": "bob build",
+    "prepack": "yarn build",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "test": "jest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@react-native-community/eslint-config": "patch:@react-native-community/eslint-config@npm%3A3.2.0#~/.yarn/patches/@react-native-community-eslint-config-npm-3.2.0-d7fa7cb395.patch",
+    "@react-native/babel-preset": "0.78.2",
+    "@types/react": "~18.3.23",
+    "dprint": "^0.50.0",
+    "eslint": "^8.57.1",
+    "react": "18.3.1",
+    "react-native": "0.71.19",
+    "react-native-builder-bob": "^0.20.4",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-macos": "*"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.json"
+        }
+      ]
+    ]
+  },
+  "codegenConfig": {
+    "name": "RNDocumentPickerSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
+  },
+  "engines": {
+    "node": ">= 22.0.0"
+  },
+  "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c",
+  "description": "macOS document picker",
+  "keywords": [
+    "react-native",
+    "react-native-macos"
+  ],
+  "homepage": "https://github.com/victorhenrion/react-native-document-picker-macos#readme",
+  "bugs": {
+    "url": "https://github.com/victorhenrion/react-native-document-picker-macos/issues"
+  },
+  "repository": "github:victorhenrion/react-native-document-picker-macos",
+  "license": "MIT",
+  "author": "Victor Henrion <bonjour@victor.id> (https://github.com/victorhenrion)"
+}

@@ -1,0 +1,65 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Lint files
+        run: yarn lint
+
+      - name: Typecheck files
+        run: yarn typecheck
+
+  build-library:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build package
+        run: yarn prepack
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Cache cocoapods
+        id: cocoapods-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/macos/Pods
+          key: ${{ runner.os }}-cocoapods-${{ hashFiles('example/macos/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cocoapods-
+
+      - name: Install cocoapods
+        run: |
+          yarn example pods
+        env:
+          NO_FLIPPER: 1
+
+      - name: Build example for MacOS
+        run: |
+          yarn run build:macos

@@ -1,0 +1,31 @@
+{
+  "name": "example",
+  "scripts": {
+    "pods": "pod install --project-directory=macos",
+    "build": "react-native build-macos",
+    "launch": "react-native run-macos",
+    "start": "react-native start"
+  },
+  "dependencies": {
+    "react": "19.0.0",
+    "react-native": "0.78.2",
+    "react-native-document-picker-macos": "workspace:*",
+    "react-native-macos": "^0.78.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/runtime": "^7.27.6",
+    "@react-native-community/cli": "15.0.1",
+    "@react-native/babel-preset": "0.78.2",
+    "@react-native/metro-config": "0.78.2",
+    "@react-native/typescript-config": "0.78.2",
+    "@types/react": "~19.0.12",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">= 22.0.0"
+  },
+  "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c",
+  "private": true
+}

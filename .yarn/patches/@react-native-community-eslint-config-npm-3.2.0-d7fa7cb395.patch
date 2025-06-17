@@ -1,0 +1,13 @@
+diff --git a/index.js b/index.js
+index bb5e2e32c94bf0279a0408415d1a41545cb39c54..d0587162c125623828c82dfd4ae31d1a9aa16b4c 100644
+--- a/index.js
++++ b/index.js
+@@ -16,8 +16,6 @@ module.exports = {
+     sourceType: 'module',
+   },
+ 
+-  extends: ['plugin:prettier/recommended'],
+-
+   plugins: [
+     'eslint-comments',
+     'react',

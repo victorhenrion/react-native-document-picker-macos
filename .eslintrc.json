@@ -1,0 +1,14 @@
+{
+    "root": true,
+    "extends": [
+        "@react-native-community/eslint-config"
+    ],
+    "ignorePatterns": [
+        "lib/**/*",
+        "node_modules/**/*"
+    ],
+    "rules": {
+        "semi": "off",
+        "@typescript-eslint/no-unused-vars": "warn"
+    }
+}
