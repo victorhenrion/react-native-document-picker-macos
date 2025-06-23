@@ -2,7 +2,7 @@
 
 A file and directory picker for React Native macOS.
 
-![NPM Version](https://img.shields.io/npm/v/react-native-document-picker-macos)
+[![NPM Version](https://img.shields.io/npm/v/react-native-document-picker-macos)](https://www.npmjs.com/package/react-native-document-picker-macos)
 
 ## Installation
 
