@@ -32,13 +32,13 @@
   },
   "devDependencies": {
     "@react-native-community/eslint-config": "patch:@react-native-community/eslint-config@npm%3A3.2.0#~/.yarn/patches/@react-native-community-eslint-config-npm-3.2.0-d7fa7cb395.patch",
-    "@react-native/babel-preset": "0.78.2",
-    "@types/react": "~18.3.23",
-    "dprint": "^0.50.0",
+    "@react-native/babel-preset": "0.78.3",
+    "@types/react": "~19.0.14",
+    "dprint": "^0.50.1",
     "eslint": "^8.57.1",
-    "react": "18.3.1",
-    "react-native": "0.71.19",
-    "react-native-builder-bob": "^0.20.4",
+    "react": "19.0.0",
+    "react-native": "0.78.3",
+    "react-native-builder-bob": "~0.40.12",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {

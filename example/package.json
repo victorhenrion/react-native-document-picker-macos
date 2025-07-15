@@ -8,19 +8,19 @@
   },
   "dependencies": {
     "react": "19.0.0",
-    "react-native": "0.78.2",
+    "react-native": "0.78.3",
     "react-native-document-picker-macos": "workspace:*",
-    "react-native-macos": "^0.78.3"
+    "react-native-macos": "0.78.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.4",
-    "@babel/preset-env": "^7.27.2",
-    "@babel/runtime": "^7.27.6",
+    "@babel/core": "~7.27.7",
+    "@babel/preset-env": "~7.27.2",
+    "@babel/runtime": "~7.27.6",
     "@react-native-community/cli": "15.0.1",
-    "@react-native/babel-preset": "0.78.2",
-    "@react-native/metro-config": "0.78.2",
-    "@react-native/typescript-config": "0.78.2",
-    "@types/react": "~19.0.12",
+    "@react-native/babel-preset": "0.78.3",
+    "@react-native/metro-config": "0.78.3",
+    "@react-native/typescript-config": "0.78.3",
+    "@types/react": "~19.0.14",
     "typescript": "^5.8.3"
   },
   "engines": {
