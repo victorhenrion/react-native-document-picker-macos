@@ -1,5 +1,4 @@
-import type { TurboModule } from 'react-native'
-import { TurboModuleRegistry } from 'react-native'
+import { type TurboModule, TurboModuleRegistry } from 'react-native'
 
 export interface Spec extends TurboModule {
     pick(options: {

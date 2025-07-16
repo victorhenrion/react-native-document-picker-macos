@@ -1,17 +1,15 @@
-#import <Foundation/Foundation.h>
-#import <React/RCTBridgeModule.h>
-
 #ifdef RCT_NEW_ARCH_ENABLED
-#import <React/RCTTurboModule.h>
-#endif
 
-NS_ASSUME_NONNULL_BEGIN
+#import <RNDocumentPickerSpec/RNDocumentPickerSpec.h>
 
-@interface RNDocumentPicker : NSObject <RCTBridgeModule
-#ifdef RCT_NEW_ARCH_ENABLED
-, RCTTurboModule
-#endif
->
+@interface RNDocumentPicker : NSObject <NativeRNDocumentPickerSpec>
 @end
 
-NS_ASSUME_NONNULL_END
+#else
+
+#import <React/RCTBridgeModule.h>
+
+@interface RNDocumentPicker : NSObject <RCTBridgeModule>
+@end
+
+#endif

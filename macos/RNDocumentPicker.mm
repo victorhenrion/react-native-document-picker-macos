@@ -1,51 +1,93 @@
 #import "RNDocumentPicker.h"
-#import <React/RCTUtils.h>
-#import <Cocoa/Cocoa.h>
-#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
-#import <CoreServices/CoreServices.h>
 
-#ifdef RCT_NEW_ARCH_ENABLED
-#import <ReactCommon/TurboModuleUtils.h>
-#import "RNDocumentPickerSpec.h"
-#endif
+#import <Cocoa/Cocoa.h>
+#import <CoreServices/CoreServices.h>
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 @implementation RNDocumentPicker
 
 RCT_EXPORT_MODULE();
 
-#pragma mark - React exports
+#ifdef RCT_NEW_ARCH_ENABLED
 
-RCT_EXPORT_METHOD(
-    pick:(NSDictionary *)options
-    resolver:(RCTPromiseResolveBlock)resolve
-    rejecter:(RCTPromiseRejectBlock)reject)
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params
+{
+    return std::make_shared<facebook::react::NativeRNDocumentPickerSpecJSI>(params);
+}
+
+- (void)pick:(JS::NativeRNDocumentPicker::SpecPickOptions &)options
+         resolve:(RCTPromiseResolveBlock)resolve
+         reject:(RCTPromiseRejectBlock)reject
+{
+    BOOL allowDirectorySelection     = options.allowDirectorySelection().value_or(NO);
+    BOOL allowFileSelection          = options.allowFileSelection().value_or(NO);
+    BOOL multiple                    = options.multiple().value_or(NO);
+    NSArray<NSString *> *allowedUTIs = nil;
+
+    if (auto utisOpt = options.allowedUTIs(); utisOpt) {
+        const auto &vec = *utisOpt;
+        NSMutableArray<NSString *> *tmp = [NSMutableArray arrayWithCapacity:vec.size()];
+        for (NSString *uti : vec) [tmp addObject:uti];
+        allowedUTIs = tmp;
+    }
+
+    [self pickImpl:allowDirectorySelection
+        allowFileSelection:allowFileSelection
+        multiple:multiple
+        allowedUTIs:allowedUTIs
+        resolve:resolve
+        reject:reject];
+}
+
+#else
+
+RCT_EXPORT_METHOD(pick:(NSDictionary<NSString *, id> * _Nonnull)options
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+    BOOL allowDirectorySelection     = [options[@"allowDirectorySelection"] boolValue];
+    BOOL allowFileSelection          = [options[@"allowFileSelection"] boolValue];
+    BOOL multiple                    = [options[@"multiple"] boolValue];
+    NSArray<NSString *> *allowedUTIs = nil;
+
+    if ([options[@"allowedUTIs"] isKindOfClass:[NSArray class]]) {
+        allowedUTIs = (NSArray<NSString *> *)options[@"allowedUTIs"];
+    }
+
+    [self pickImpl:allowDirectorySelection
+        allowFileSelection:allowFileSelection
+        multiple:multiple
+        allowedUTIs:allowedUTIs
+        resolve:resolve
+        reject:reject];
+}
+
+#endif
+
+- (void)pickImpl:(BOOL)allowDirectorySelection
+        allowFileSelection:(BOOL)allowFileSelection
+        multiple:(BOOL)multiple
+        allowedUTIs:(NSArray<NSString *> *)allowedUTIs
+        resolve:(RCTPromiseResolveBlock)resolve
+        reject:(RCTPromiseRejectBlock)reject
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSOpenPanel *panel = [NSOpenPanel openPanel];
 
-        BOOL allowDirectories = [options objectForKey:@"allowDirectorySelection"] ? [options[@"allowDirectorySelection"] boolValue] : NO;
-        BOOL allowFiles       = [options objectForKey:@"allowFileSelection"] ? [options[@"allowFileSelection"] boolValue] : YES;
-        BOOL multiple         = [options objectForKey:@"multiple"] ? [options[@"multiple"] boolValue] : NO;
-        NSArray *utis         = [options objectForKey:@"allowedUTIs"];
-
-        panel.canChooseDirectories = allowDirectories;
-        panel.canChooseFiles       = allowFiles;
+        panel.canChooseDirectories    = allowDirectorySelection;
+        panel.canChooseFiles          = allowFileSelection;
         panel.allowsMultipleSelection = multiple;
-        panel.resolvesAliases = YES;
+        panel.resolvesAliases         = YES;
 
-        if (utis != nil && [utis isKindOfClass:[NSArray class]] && utis.count > 0) {
-            if (@available(macOS 11.0, *)) {
-                NSMutableArray<UTType *> *contentTypes = [NSMutableArray new];
-                for (NSString *uti in utis) {
-                    UTType *type = [UTType typeWithIdentifier:uti];
-                    if (type) {
-                        [contentTypes addObject:type];
-                    }
+        if (allowedUTIs != nil && [allowedUTIs isKindOfClass:[NSArray class]] && allowedUTIs.count > 0) {
+            NSMutableArray<UTType *> *contentTypes = [NSMutableArray new];
+            for (NSString *uti in allowedUTIs) {
+                UTType *type = [UTType typeWithIdentifier:uti];
+                if (type) {
+                    [contentTypes addObject:type];
                 }
-                panel.allowedContentTypes = contentTypes;
-            } else {
-                panel.allowedFileTypes = utis;
             }
+            panel.allowedContentTypes = contentTypes;
         }
 
         NSInteger result = [panel runModal];
@@ -58,20 +100,9 @@ RCT_EXPORT_METHOD(
                 NSDictionary *attributes = [fileManager attributesOfItemAtPath:path error:nil];
                 NSNumber *size = attributes[NSFileSize];
                 NSString *mimeType = nil;
-                if (@available(macOS 11.0, *)) {
-                    UTType *uti = [url resourceValuesForKeys:@[NSURLContentTypeKey] error:nil][NSURLContentTypeKey];
-                    if (uti) {
-                        mimeType = uti.preferredMIMEType;
-                    }
-                } else {
-                    NSString *uti = nil;
-                    [url getResourceValue:&uti forKey:NSURLTypeIdentifierKey error:nil];
-                    if (uti) {
-                        CFStringRef mimeTypeCF = UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)uti, kUTTagClassMIMEType);
-                        if (mimeTypeCF) {
-                            mimeType = (__bridge_transfer NSString *)mimeTypeCF;
-                        }
-                    }
+                UTType *uti = [url resourceValuesForKeys:@[NSURLContentTypeKey] error:nil][NSURLContentTypeKey];
+                if (uti) {
+                    mimeType = uti.preferredMIMEType;
                 }
                 NSString *name = url.lastPathComponent;
 
@@ -99,12 +130,5 @@ RCT_EXPORT_METHOD(
         }
     });
 }
-
-#ifdef RCT_NEW_ARCH_ENABLED
-- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params
-{
-    return std::make_shared<facebook::react::NativeRNDocumentPickerSpec>(params);
-}
-#endif
 
 @end
